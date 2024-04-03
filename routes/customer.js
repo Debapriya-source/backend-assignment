@@ -1,7 +1,6 @@
 const express = require("express");
 let router = express.Router();
 const customer = require("../controllers/customer_controller");
-const { resume } = require("../database/connection");
 
 //a middleware for printing called routes
 router.use(async (req, res, next) => {
@@ -21,7 +20,7 @@ router.use(async (req, res, next) => {
 router.route("/all").get(async (req, res) => {
   try {
     const result = await customer.get_all();
-    console.log("result", result);
+    // console.log("result", result);
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ message: err.message });
