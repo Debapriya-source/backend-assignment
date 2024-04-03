@@ -1,6 +1,7 @@
 const express = require("express");
 let router = express.Router();
 const customer = require("../controllers/customer_controller");
+const { resume } = require("../database/connection");
 
 //a middleware for printing called routes
 router.use(async (req, res, next) => {
@@ -17,17 +18,17 @@ router.use(async (req, res, next) => {
   next();
 });
 
-router.route("/all").get((req, res) => {
+router.route("/all").get(async (req, res) => {
   try {
-    const result = customer.get_all();
+    const result = await customer.get_all();
     console.log("result", result);
-    res.json({ message: result });
+    res.status(200).json(result);
   } catch (err) {
-    res.json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
-router.route("/register").post((req, res) => {
+router.route("/register").post(async (req, res) => {
   const {
     customer_id,
     first_name,
@@ -35,26 +36,26 @@ router.route("/register").post((req, res) => {
     age,
     monthly_income,
     phone_number,
-    // approved_limit,
     current_debt,
   } = req.body;
 
-  appproved_limit = 36 * monthly_income;
+  approved_limit = 36 * monthly_income;
 
   try {
-    const result = customer.register([
+    await customer.register([
       customer_id,
       first_name,
       last_name,
       age,
       phone_number,
-      monthly_salary,
+      monthly_income,
       approved_limit,
       current_debt,
     ]);
-    res.json(result);
+    const result = await customer.get_by_id(customer_id);
+    res.status(201).json(result);
   } catch (err) {
-    res.send(err.message);
+    res.status(409).send(err.message);
   }
 });
 
