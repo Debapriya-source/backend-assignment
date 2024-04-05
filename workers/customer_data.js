@@ -1,19 +1,14 @@
 const {
   populate_customer_data,
 } = require("../controllers/customer_controller");
-
 const celery = require("celery-node");
-
+require("dotenv").config();
 // function worker() {
-const redisMessageBrokerUrl = "amqp://";
-//"redis://127.0.0.1:6379/0";
-const redisResultBackendUrl = "amqp://"; //"redis://127.0.0.1:6379/0";
+const MessageBrokerUrl = process.env.MESSAGE_BROKER_URL;
+const ResultBackendUrl = process.env.RESULT_BACKEND_URL;
 
-// Create a Celery worker with Redis URLs as strings
-const worker = celery.createWorker(
-  redisMessageBrokerUrl, // Redis URL for message broker
-  redisResultBackendUrl // Redis URL for result backend
-);
+// Create a Celery worker with  URLs as strings
+const worker = celery.createWorker(MessageBrokerUrl, ResultBackendUrl);
 
 worker.register(
   "tasks.populate_customer_data",

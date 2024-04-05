@@ -1,9 +1,11 @@
 const { populate_loan_data } = require("../controllers/loan_controller");
-
 const celery = require("celery-node");
-
+require("dotenv").config();
 // function worker() {
-const worker = celery.createWorker("amqp://", "amqp://");
+
+const MessageBrokerUrl = process.env.MESSAGE_BROKER_URL;
+const ResultBackendUrl = process.env.RESULT_BACKEND_URL;
+const worker = celery.createWorker(MessageBrokerUrl, ResultBackendUrl);
 
 worker.register("tasks.populate_loan_data", async (excelFilePath) => {
   console.log("worker ", excelFilePath);
