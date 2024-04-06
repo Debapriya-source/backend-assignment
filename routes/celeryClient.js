@@ -3,7 +3,7 @@ let router = express.Router();
 const celery = require("celery-node");
 require("../workers/customer_data");
 require("../workers/loan_data");
-// const celeryClient = celery.createClient("amqp://", "amqp://");
+// const celeryClient = celery.createClient("amqp://rabbitmq:5672", "amqp://rabbitmq:5672");
 
 // console.log("Client: ", celeryClient);
 
@@ -18,7 +18,10 @@ router.route("/customer_data").post(async (req, res) => {
   // console.log(excelFilePath);
   // Trigger Celery task to parse Excel file and populate database
   try {
-    const celeryClient = celery.createClient("amqp://", "amqp://");
+    const celeryClient = celery.createClient(
+      "amqp://rabbitmq:5672",
+      "amqp://rabbitmq:5672"
+    );
     console.log("Loading customers");
     const task = celeryClient.createTask("tasks.populate_customer_data");
     console.log(task);
@@ -42,7 +45,10 @@ router.route("/loan_data").post(async (req, res) => {
   console.log(excelFilePath);
   // Trigger Celery task to parse Excel file and populate database
   try {
-    const celeryClient = celery.createClient("amqp://", "amqp://");
+    const celeryClient = celery.createClient(
+      "amqp://rabbitmq:5672",
+      "amqp://rabbitmq:5672"
+    );
     console.log("Loading loans");
     const task = celeryClient.createTask("tasks.populate_loan_data");
     console.log(task);

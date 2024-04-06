@@ -4,8 +4,10 @@ const {
 const celery = require("celery-node");
 require("dotenv").config();
 // function worker() {
-const MessageBrokerUrl = process.env.MESSAGE_BROKER_URL || "amqp://";
-const ResultBackendUrl = process.env.RESULT_BACKEND_URL || "amqp://";
+const MessageBrokerUrl =
+  process.env.MESSAGE_BROKER_URL || "amqp://rabbitmq:5672";
+const ResultBackendUrl =
+  process.env.RESULT_BACKEND_URL || "amqp://rabbitmq:5672";
 
 // Create a Celery worker with  URLs as strings
 const worker = celery.createWorker(MessageBrokerUrl, ResultBackendUrl);
