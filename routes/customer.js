@@ -4,7 +4,7 @@ const customer = require("../controllers/customer_controller");
 
 //a middleware for printing called routes
 router.use(async (req, res, next) => {
-  console.log("/", req.url, "on", Date());
+  console.log(req.url, "on", Date());
   next();
 });
 

@@ -1,6 +1,7 @@
 const pool = require("../database/connection");
 const xlsx = require("xlsx");
-
+// const {get_all_customers_query, register_customer_query, get_customer_by_id} = require("../config/db_queries")
+// const loan = require("../controllers/loan_controller");
 const get_all_customers_query = `SELECT * FROM customer_data;`;
 const register_customer_query = `INSERT INTO customer_data (customer_id, first_name, last_name, age,  monthly_salary, phone_number, approved_limit, current_debt) 
 VALUES (?,?,?,?,?,?,?,?);`;
@@ -13,7 +14,7 @@ async function get_all() {
     return result;
   } catch (err) {
     console.error(err.message);
-    throw new Error(err.message);
+    return { error: err.message };
   }
 }
 
@@ -75,4 +76,9 @@ async function populate_customer_data(excelFilePath) {
   });
 }
 
-module.exports = { register, get_all, get_by_id, populate_customer_data };
+module.exports = {
+  register,
+  get_all,
+  get_by_id,
+  populate_customer_data,
+};

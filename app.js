@@ -3,10 +3,11 @@ let bodyParser = require("body-parser");
 const app = express();
 require("dotenv").config();
 const port = process.env.PORT || 7000;
-// require("./database/connection");
-// require("./database/initiate_database_and_tables");
+require("./database/connection");
+require("./database/initiate_database_and_tables");
 const customer = require("./routes/customer");
 const loan = require("./routes/loan");
+const transactions = require("./routes/transactions");
 const ingest = require("./routes/celeryClient");
 
 // middlewares
@@ -20,6 +21,7 @@ app.use((err, req, res, next) => {
 });
 app.use("/", customer);
 app.use("/", loan);
+app.use("/", transactions);
 app.use("/ingest", ingest);
 
 app.get("/", (req, res) => {
