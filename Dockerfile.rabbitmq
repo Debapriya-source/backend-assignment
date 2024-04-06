@@ -1,0 +1,5 @@
+# Use the official RabbitMQ image
+FROM rabbitmq:3.9.7
+
+# Enable the management plugin (optional)
+RUN rabbitmq-plugins enable --offline rabbitmq_management

@@ -1,0 +1,10 @@
+# Use the official MySQL image
+FROM mysql:8.0
+
+# Set the root password
+ENV MYSQL_ROOT_PASSWORD=1234
+
+# Set up the database and user
+ENV MYSQL_DATABASE='backend_assignment'
+ENV MYSQL_USER='MYSQL80'
+ENV MYSQL_PASSWORD=1234

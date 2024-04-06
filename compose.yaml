@@ -1,39 +1,144 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker Compose reference guide at
-# https://docs.docker.com/go/compose-spec-reference/
+# # Comments are provided throughout this file to help you get started.
+# # If you need more help, visit the Docker Compose reference guide at
+# # https://docs.docker.com/go/compose-spec-reference/
 
-# Here the instructions define your application as a service called "server".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
-services:
+# # Here the instructions define your application as a service called "server".
+# # This service is built from the Dockerfile in the current directory.
+# # You can add other services your application may depend on here, such as a
+# # database or a cache. For examples, see the Awesome Compose repository:
+# # https://github.com/docker/awesome-compose
+# services:
   
-  server:
+#   server:
+#     build:
+#       context: .
+#     environment:
+#       NODE_ENV: production
+#     ports:
+#       - 3000:3000
+#     depends_on:
+#       - rabbitmq
+#   rabbitmq:
+#     image: rabbitmq:3.9-management
+#     ports:
+#       - 5672:5672
+#       - 15672:15672    
+
+
+#     depends_on:
+#       - db
+#   db:
+#     image: mysql:8.0
+#     environment:
+#       MYSQL_ROOT_PASSWORD: 1234
+#       MYSQL_DATABASE: backend_assignment
+#       MYSQL_USER: Loan_backend_db
+#       MYSQL_PASSWORD: 1234
+#     ports:
+#       - "3306:3306"
+
+
+# version: '0'
+
+# services:
+#   server:
+#     build:
+#       context: .
+#     environment:
+#       NODE_ENV: production
+#     ports:
+#       - 3000:3000
+#     depends_on:
+#       - rabbitmq
+
+#   rabbitmq:
+#     build:
+#       context: ./rabbitmq
+#     container_name: rabbitmq_container
+#     restart: always
+#     ports:
+#       - "5672:5672"
+#       - "15672:15672"  #
+
+#   depends_on:
+#       - mysql 
+#   mysql:
+#     build:
+#       context: ./mysql
+#     container_name: mysql_container
+#     restart: always
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - ./mysql_data:/var/lib/mysql
+
+
+# version: '0'
+
+# services:
+#   server:
+#     build:
+#       context: .
+#     environment:
+#       NODE_ENV: production
+#     ports:
+#       - 3000:3000
+#     depends_on:
+#       - rabbitmq
+
+#   rabbitmq:
+#     container_name: rabbitmq_container
+#     restart: always
+#     ports:
+#       - "5672:5672"
+#       - "15672:15672"
+#     depends_on:
+#       - mysql 
+
+#   mysql:
+#     container_name: mysql_container
+#     restart: always
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - ./mysql_data:/var/lib/mysql
+
+
+version: '3.8'
+
+services:
+  rabbitmq:
     build:
       context: .
-    environment:
-      NODE_ENV: production
+      dockerfile: Dockerfile.rabbitmq
     ports:
-      - 3000:3000
+      - "5672:5672"  # AMQP port
+      - "15672:15672"  # RabbitMQ management UI port
+    networks:
+      - mynetwork
+
+  mysql:
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    ports:
+      - "3306:3306"  # MySQL port
+    networks:
+      - mynetwork
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
     depends_on:
       - rabbitmq
-  rabbitmq:
-    image: rabbitmq:3.9-management
-    ports:
-      - 5672:5672
-      - 15672:15672    
+      - mysql
+    networks:
+      - mynetwork
 
-
-    depends_on:
-      - db
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: backend_assignment
-      MYSQL_USER: Loan_backend_db
-      MYSQL_PASSWORD: 1234
-    ports:
-      - "5000:3306"
-
+networks:
+  mynetwork:

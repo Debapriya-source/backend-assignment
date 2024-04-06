@@ -3,8 +3,8 @@ const celery = require("celery-node");
 require("dotenv").config();
 // function worker() {
 
-const MessageBrokerUrl = process.env.MESSAGE_BROKER_URL;
-const ResultBackendUrl = process.env.RESULT_BACKEND_URL;
+const MessageBrokerUrl = process.env.MESSAGE_BROKER_URL || "amqp://";
+const ResultBackendUrl = process.env.RESULT_BACKEND_URL || "amqp://";
 const worker = celery.createWorker(MessageBrokerUrl, ResultBackendUrl);
 
 worker.register("tasks.populate_loan_data", async (excelFilePath) => {
